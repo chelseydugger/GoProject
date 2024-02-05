@@ -1,8 +1,24 @@
 name: hello-world
-on: push
+'on': push
 jobs:
   my-job:
     runs-on: ubuntu-latest
     steps:
       - name: my-step
         run: echo "Hello World!"
+  deploy-qa:
+    runs-on: ubuntu-latest
+    environment: QA
+    needs: my-job
+    steps:
+      - name: qa-deployment
+        run: echo "Deployed to QA environment"
+  deploy-stage:
+    runs-on: ubuntu-latest
+    environment: Stage
+    needs:
+      - my-job
+      - deploy-qa
+    steps:
+      - name: stage-deployment
+        run: echo "Deployed to Staging environment"
